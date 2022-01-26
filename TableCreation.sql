@@ -19,7 +19,7 @@ CREATE TABLE "User"
   IsAdmin INT NOT NULL,
   UserPassword VARCHAR(255) NOT NULL,
   UserID SERIAL NOT NULL,
-  DefaultAvailableTimes  NOT NULL,
+  DefaultAvailableTimes DATE[] NOT NULL,
   PRIMARY KEY (UserID),
   UNIQUE (EmailAddress)
 );
@@ -27,7 +27,7 @@ CREATE TABLE "User"
 CREATE TABLE "GroupHasUser"
 (
   UserNickname INT NOT NULL,
-  AvailableTimes INT NOT NULL,
+  AvailableTimes DATE[] NOT NULL,
   UserID INT NOT NULL,
   GroupID INT NOT NULL,
   PRIMARY KEY (UserID, GroupID),
