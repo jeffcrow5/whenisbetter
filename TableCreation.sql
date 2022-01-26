@@ -1,12 +1,14 @@
 CREATE TABLE Group
 (
-  GroupInviteCode INT NOT NULL,
+  GroupInviteCode VARCHAR(12) NOT NULL,
   GroupName VARCHAR(255) NOT NULL,
   GroupDesc VARCHAR(255),
   GroupColor VARCHAR(255) NOT NULL,
   GroupImage VARCHAR(255),
   GroupAdmin INT NOT NULL,
-  PRIMARY KEY (GroupInviteCode)
+  GroupID INT NOT NULL,
+  PRIMARY KEY (GroupID),
+  UNIQUE (GroupInviteCode)
 );
 
 CREATE TABLE User
@@ -24,18 +26,18 @@ CREATE TABLE User
 
 CREATE TABLE GroupHasUser
 (
-  UserNickname VARCHAR(255) NOT NULL,
-  AvailableTimes  NOT NULL,
+  UserNickname INT NOT NULL,
+  AvailableTimes INT NOT NULL,
   UserID INT NOT NULL,
-  GroupInviteCode INT NOT NULL,
-  PRIMARY KEY (UserID, GroupInviteCode),
+  GroupID INT NOT NULL,
+  PRIMARY KEY (UserID, GroupID),
   FOREIGN KEY (UserID) REFERENCES User(UserID),
-  FOREIGN KEY (GroupInviteCode) REFERENCES Group(GroupInviteCode)
+  FOREIGN KEY (GroupID) REFERENCES Group(GroupID)
 );
 
 CREATE TABLE User_PhoneNumber
 (
-  PhoneNumber VARCHAR NOT NULL,
+  PhoneNumber INT NOT NULL,
   UserID INT NOT NULL,
   PRIMARY KEY (PhoneNumber, UserID),
   FOREIGN KEY (UserID) REFERENCES User(UserID)
@@ -48,9 +50,9 @@ CREATE TABLE Event
   EventDuration FLOAT NOT NULL,
   EventStartTime DATE NOT NULL,
   EventID INT NOT NULL,
-  GroupInviteCode INT NOT NULL,
+  GroupID INT NOT NULL,
   PRIMARY KEY (EventID),
-  FOREIGN KEY (GroupInviteCode) REFERENCES Group(GroupInviteCode)
+  FOREIGN KEY (GroupID) REFERENCES Group(GroupID)
 );
 
 CREATE TABLE UserAttendsEvent
