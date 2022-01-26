@@ -31,8 +31,8 @@ CREATE TABLE "GroupHasUser"
   UserID INT NOT NULL,
   GroupID INT NOT NULL,
   PRIMARY KEY (UserID, GroupID),
-  FOREIGN KEY (UserID) REFERENCES User(UserID),
-  FOREIGN KEY (GroupID) REFERENCES Group(GroupID)
+  FOREIGN KEY (UserID) REFERENCES "User"(UserID),
+  FOREIGN KEY (GroupID) REFERENCES "Group"(GroupID)
 );
 
 CREATE TABLE "User_PhoneNumber"
@@ -40,7 +40,7 @@ CREATE TABLE "User_PhoneNumber"
   PhoneNumber INT NOT NULL,
   UserID INT NOT NULL,
   PRIMARY KEY (PhoneNumber, UserID),
-  FOREIGN KEY (UserID) REFERENCES User(UserID)
+  FOREIGN KEY (UserID) REFERENCES "User"(UserID)
 );
 
 CREATE TABLE "Event"
@@ -52,7 +52,7 @@ CREATE TABLE "Event"
   EventID SERIAL NOT NULL,
   GroupID INT NOT NULL,
   PRIMARY KEY (EventID),
-  FOREIGN KEY (GroupID) REFERENCES Group(GroupID)
+  FOREIGN KEY (GroupID) REFERENCES "Group"(GroupID)
 );
 
 CREATE TABLE "UserAttendsEvent"
@@ -60,6 +60,6 @@ CREATE TABLE "UserAttendsEvent"
   EventID INT NOT NULL,
   UserID INT NOT NULL,
   PRIMARY KEY (EventID, UserID),
-  FOREIGN KEY (EventID) REFERENCES Event(EventID),
-  FOREIGN KEY (UserID) REFERENCES User(UserID)
+  FOREIGN KEY (EventID) REFERENCES "Event"(EventID),
+  FOREIGN KEY (UserID) REFERENCES "User"(UserID)
 );
