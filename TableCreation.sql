@@ -48,7 +48,7 @@ CREATE TABLE "Event"
   EventName VARCHAR(255) NOT NULL,
   EventDesc VARCHAR(255),
   EventDuration FLOAT NOT NULL,
-  EventStartTime DATETIME NOT NULL,
+  EventStartTime TIMESTAMP NOT NULL,
   EventID SERIAL NOT NULL,
   GroupID INT NOT NULL,
   PRIMARY KEY (EventID),
