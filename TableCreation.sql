@@ -19,25 +19,42 @@ CREATE TABLE "User"
   IsAdmin INT NOT NULL,
   UserPassword VARCHAR(255) NOT NULL,
   UserID SERIAL NOT NULL,
-  DefaultAvailableTimes VARCHAR(255)[] NOT NULL,
   PRIMARY KEY (UserID),
   UNIQUE (EmailAddress)
 );
 
-CREATE TABLE "GroupHasUser"
+CREATE TABLE "UserDefaultTimes"
 (
-  UserNickname INT NOT NULL,
-  AvailableTimes VARCHAR(255)[] NOT NULL,
+  WeekDay VARCHAR(255) NOT NULL,
+  Hour INT NOT NULL,
   UserID INT NOT NULL,
-  GroupID INT NOT NULL,
-  PRIMARY KEY (UserID, GroupID),
-  FOREIGN KEY (UserID) REFERENCES "User"(UserID),
-  FOREIGN KEY (GroupID) REFERENCES "Group"(GroupID)
+  FOREIGN KEY (UserID) REFERENCES "User"(UserID)
 );
 
-CREATE TABLE "User_PhoneNumber"
+
+CREATE TABLE "GroupHasUser"
 (
-  PhoneNumber INT NOT NULL,
+  UserNickname VARCHAR(255) NOT NULL,
+  GroupHasUserID SERIAL NOT NULL,
+  UserID INT NOT NULL,
+  GroupID INT NOT NULL,
+  PRIMARY KEY (GroupHasUserID),
+  FOREIGN KEY (UserID) REFERENCES "User"(UserID),
+  FOREIGN KEY (GroupID) REFERENCES "Group"(GroupID),
+  UNIQUE (UserID, GroupID)
+);
+
+CREATE TABLE "GroupHasUserTimes"
+(
+  WeekDay VARCHAR(255) NOT NULL,
+  Hour INT NOT NULL,
+  GroupHasUserID INT NOT NULL,
+  FOREIGN KEY (GroupHasUserID) REFERENCES "GroupHasUser"(GroupHasUserID)
+);
+
+CREATE TABLE "UserPhoneNumber"
+(
+  PhoneNumber VARCHAR(255) NOT NULL,
   UserID INT NOT NULL,
   PRIMARY KEY (PhoneNumber, UserID),
   FOREIGN KEY (UserID) REFERENCES "User"(UserID)
