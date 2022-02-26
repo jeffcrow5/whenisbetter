@@ -1,4 +1,4 @@
--- Signup Function
+-- Signup Function (Adds a new user to the database with their name, email, and hashed password)
 CREATE OR REPLACE FUNCTION
 signup(firstname text, lastname text, email text, password text) RETURNS VOID
 AS $$
@@ -6,7 +6,7 @@ AS $$
     (signup.firstname, signup.lastname, signup.email, crypt(signup.password, gen_salt('bf', 8)), 0);
 $$ LANGUAGE sql SECURITY DEFINER;
 
--- Login Function
+-- Login Function (Verifies the password hash and returns an authorization token if successful)
 CREATE OR REPLACE FUNCTION
 login(email TEXT, password TEXT) RETURNS jwt_token
   LANGUAGE plpgsql SECURITY DEFINER
