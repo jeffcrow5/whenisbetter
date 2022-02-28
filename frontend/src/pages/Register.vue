@@ -9,12 +9,21 @@
       <form name="form" @submit.prevent="handleRegister">
         <div>
           <div class="form-group">
-            <label for="username">Name</label>
+            <label for="username">First Name</label>
             <input
-              v-model="name"
+              v-model="firstName"
               type="text"
               class="form-control"
-              name="name"
+              name="firstName"
+            />
+          </div>
+          <div class="form-group">
+            <label for="username">Last Name</label>
+            <input
+              v-model="lastName"
+              type="text"
+              class="form-control"
+              name="lastName"
             />
           </div>
           <div class="form-group">
@@ -60,7 +69,8 @@ export default {
   name: "Register",
   data() {
     return {
-      name: "",
+      firstName: "",
+      lastName: "",
       email: "",
       password: "",
       loading: false,
@@ -72,7 +82,7 @@ export default {
       this.message = "";
       this.loading = true;
 
-      Api.signup(this.email, this.password, this.name)
+      Api.signup(this.firstName, this.lastName, this.email, this.password)
         .then(() => {
           this.$router.push("/login");
         })

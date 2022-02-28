@@ -1,7 +1,7 @@
 import axios from "axios";
 import { authHeader, getJwtToken, getUserIdFromToken } from "./auth";
 
-const API_URL = "http://54.205.253.120/:8000";
+const API_URL = "http://54.205.253.120:8000";
 
 class Api {
   getArticles() {
@@ -56,8 +56,8 @@ class Api {
     return axios.post(API_URL + "/rpc/login", { email, password });
   }
 
-  signup(email, password, name) {
-    return axios.post(API_URL + "/rpc/signup", { email, password, name });
+  signup(firstname, lastname, email, password) {
+    return axios.post(API_URL + "/rpc/signup", { firstname, lastname, email, password });
   }
 }
 
