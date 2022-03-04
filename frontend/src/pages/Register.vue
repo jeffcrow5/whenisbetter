@@ -65,6 +65,7 @@
 
 <script>
 import Api from "../api";
+import { setJwtToken } from "../auth"
 export default {
   name: "Register",
   data() {
@@ -84,7 +85,17 @@ export default {
 
       Api.signup(this.firstName, this.lastName, this.email, this.password)
         .then(() => {
-          this.$router.push("/login");
+          Api.login(this.email, this.password)
+          .then((res) => {
+            setJwtToken(res.data[0].token);
+              this.$router.push("/");
+          })
+          .catch((error) => {
+            console.log(error);
+            if (error.response && error.response.status === 403) {
+              this.message = error.response.data.message;
+            }
+          });
         })
         .catch((error) => {
           console.log(error);

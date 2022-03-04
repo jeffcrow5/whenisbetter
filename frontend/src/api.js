@@ -4,13 +4,6 @@ import { authHeader, getJwtToken, getUserIdFromToken } from "./auth";
 const API_URL = "http://54.205.253.120:8000";
 
 class Api {
-  getArticles() {
-    return axios.get(API_URL + "/articles", {});
-  }
-
-  getArticleDetail(id) {
-    return axios.get(API_URL + `/articles?articleid=eq.${id}`);
-  }
 
   addArticle(article) {
     return axios.post(
