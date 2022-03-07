@@ -24,6 +24,8 @@
 </template>
 
 <script>
+import { getJwtToken } from './auth'
+
 export default {
   name: "App",
   data() {
@@ -34,7 +36,8 @@ export default {
   components: {},
   computed: {
     token() {
-      return localStorage.getItem('accessToken')
+      console.log("test", getJwtToken())
+      return getJwtToken()
     }
   }
 };

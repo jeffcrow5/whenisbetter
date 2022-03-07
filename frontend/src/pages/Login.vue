@@ -64,7 +64,7 @@ export default {
       this.message = "";
       Api.login(this.email, this.password)
         .then((res) => {
-          setJwtToken(res.data[0].token);
+          setJwtToken(res.data[0].token)
           if (this.$route.params.nextUrl != null) {
             this.$router.push(this.$route.params.nextUrl);
           } else {

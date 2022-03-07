@@ -8,6 +8,7 @@ import Admin from "./pages/Admin";
 import Login from "./pages/Login";
 import Logout from "./pages/Logout";
 import Register from "./pages/Register";
+import Profile from "./pages/Profile"
 import Article from "./pages/Article";
 import AdminArticleAdd from "./components/AdminArticleAdd";
 import AdminArticleList from "./components/AdminArticleList";
@@ -43,6 +44,7 @@ const router = new VueRouter({
     { path: "/login", component: Login },
     { path: "/logout", component: Logout },
     { path: "/register", component: Register },
+    { path: "/profile", component: Profile},
     {
       path: "/admin",
       component: Admin,

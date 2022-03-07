@@ -5,6 +5,12 @@ const API_URL = "http://54.205.253.120:8000";
 
 class Api {
 
+  getUserProfile() {
+    return axios.get(
+      API_URL + `/user_settings?userid=eq.${getUserIdFromToken(getJwtToken())}`
+    )
+  }
+
   addArticle(article) {
     return axios.post(
       API_URL + "/articles",
