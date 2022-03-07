@@ -3,7 +3,7 @@ SELECT FirstName, LastName
 FROM "User";
 
 CREATE OR REPLACE VIEW user_groups AS
-SELECT "Group".GroupName
+SELECT "Group".GroupName, "User".UserID, "Group".GroupID, "Group".GroupInviteCode
 FROM "User"
 INNER JOIN "GroupHasUser" ON "User".UserID = "GroupHasUser".UserID
 INNER JOIN "Group" ON "Group".GroupID = "GroupHasUser".GroupID;
@@ -15,29 +15,28 @@ INNER JOIN "GroupHasUser" ON "GroupHasUser".GroupID = "Group".GroupID
 INNER JOIN "User" ON "GroupHasUser".UserID = "User".UserID;
 
 CREATE OR REPLACE VIEW user_individual_group_events AS
-SELECT "Event".EventID, "Event".EventName, "Event".EventDesc, "Event".EventDuration, "Event".EventStartTime
+SELECT "Event".EventID, "Event".EventName, "Event".EventDesc, "Event".EventDuration, "Event".EventStartTime, "Group".GroupID
 FROM "Event"
 INNER JOIN "Group" ON "Group".GroupID = "Event".GroupID;
 
 CREATE OR REPLACE VIEW user_attends_events AS
-SELECT "UserAttendsEvent".EventID
+SELECT "UserAttendsEvent".EventID, "User".UserID
 FROM "UserAttendsEvent"
 INNER JOIN "User" ON "User".UserID = "UserAttendsEvent".UserID;
 
-CREATE OR REPLACE VIEW user_join_group AS
-SELECT "UserDefaultTimes".WeekDay, "UserDefaultTimes".Hour
-FROM "UserDefaultTimes";
+CREATE OR REPLACE VIEW user_default_times AS
+SELECT DefaultTimes, UserID
+FROM "User";
 
 CREATE OR REPLACE VIEW admin_views_user AS
-SELECT "User".FirstName, "User".LastName, "User".IsAdmin, "User".UserID
+SELECT FirstName, LastName, IsAdmin, UserID
 FROM "User";
 
 CREATE OR REPLACE VIEW admin_views_groups AS
-SELECT "Group".GroupName, "Group".GroupID
+SELECT GroupName, GroupID
 FROM "Group";
 
 CREATE OR REPLACE VIEW user_settings AS
-SELECT "User".FirstName, "User".LastName, "User".EmailAddress, "UserPhoneNumber".PhoneNumber, "UserDefaultTimes".Hour, "UserDefaultTimes".WeekDay
+SELECT FirstName, LastName, EmailAddress, UserID, DefaultTimes
 FROM "User"
-INNER JOIN "UserPhoneNumber" ON "UserPhoneNumber".UserID = "User".UserID
-INNER JOIN "UserDefaultTimes" ON "UserDefaultTimes".UserID = "User".UserID;
+
