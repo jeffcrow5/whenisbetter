@@ -1,5 +1,5 @@
 INSERT INTO "User" (FirstName, LastName, EmailAddress, IsAdmin, UserPassword, DefaultTimes)
-VALUES ('Rick', 'Astley', 'nevergonnagive@you.up', '1', 'hashedPassword', '{weekday:Sunday,hour:13}');
+VALUES ('Rick', 'Astley', 'nevergonnagive@you.up', '1', '$2a$08$3CY2Rf0yKpNK9EmD.AMbY.PLe2UwCPnJs2ugtX4oQDlOXc26iCtdm', '{weekday:Sunday,hour:13}');
 
 INSERT INTO "Group" (GroupInviteCode, GroupName, GroupDesc, GroupImage, GroupAdmin)
 VALUES ('123456781234', 'Rick Rollers', 'Got em', 'test.png', '1');
