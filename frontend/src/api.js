@@ -1,13 +1,40 @@
-import axios from "axios";
-import { authHeader, getJwtToken, getUserIdFromToken } from "./auth";
+import axios from "axios"
+import { authHeader, getJwtToken, getUserIdFromToken } from "./auth"
 
-const API_URL = "http://54.205.253.120:8000";
+const API_URL = "http://54.205.253.120:8000"
+const USER_ID = getUserIdFromToken(getJwtToken())
 
 class Api {
 
   getUserProfile() {
     return axios.get(
-      API_URL + `/user_settings?userid=eq.${getUserIdFromToken(getJwtToken())}`
+      API_URL + `/user_settings?userid=eq.${USER_ID}`
+    )
+  }
+
+  setUserDefaultTimes(defaultTimes) {
+    return axios.patch(
+      API_URL + `/User?userid=eq.${USER_ID}`,
+      {
+        defaulttimes: defaultTimes
+      },
+      {
+        headers: authHeader()
+      }
+    )
+  }
+
+  setUserSettings(firstname, lastname, emailaddress) {
+    return axios.patch(
+      API_URL + `/User?userid=eq.${USER_ID}`,
+      {
+        firstname,
+        lastname,
+        emailaddress
+      },
+      {
+        headers: authHeader()
+      }
     )
   }
 
@@ -17,7 +44,7 @@ class Api {
       {
         ...article,
         // add user id from JWT token
-        userid: getUserIdFromToken(getJwtToken()),
+        userid: USER_ID,
       },
       {
         headers: authHeader(),
