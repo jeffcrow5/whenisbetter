@@ -68,6 +68,7 @@ import Api from "../api";
 import { setJwtToken } from "../auth"
 export default {
   name: "Register",
+  props: ["navbarRefresh"],
   data() {
     return {
       firstName: "",
@@ -88,7 +89,8 @@ export default {
           Api.login(this.email, this.password)
           .then((res) => {
             setJwtToken(res.data[0].token);
-              this.$router.push("/");
+            this.navbarRefresh();
+            this.$router.push("/");
           })
           .catch((error) => {
             console.log(error);

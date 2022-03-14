@@ -4,7 +4,7 @@
       <img
         id="profile-img"
         src="//ssl.gstatic.com/accounts/ui/avatar_2x.png"
-        class="profile-img-card ml-3"
+        class="profile-img-card"
       />
       <form name="form" @submit.prevent="handleLogin">
         <div class="form-group">
@@ -58,6 +58,7 @@ export default {
       message: "",
     };
   },
+  props: ["navbarRefresh"],
   methods: {
     handleLogin() {
       this.loading = true;
@@ -65,6 +66,7 @@ export default {
       Api.login(this.email, this.password)
         .then((res) => {
           setJwtToken(res.data[0].token)
+          this.navbarRefresh();
           if (this.$route.params.nextUrl != null) {
             this.$router.push(this.$route.params.nextUrl);
           } else {
