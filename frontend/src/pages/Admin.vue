@@ -1,25 +1,67 @@
 <template>
-  <div>
-    <b-navbar>
-      <b-navbar-brand :to="{ path: '/' }">Blog Admin</b-navbar-brand>
+  <div id="container">
+    <b-form-radio-group
+      buttons
+      button-variant="outline-primary"
+      v-model="activeTab"
+      :options="['Group View', 'User View']">
+    </b-form-radio-group>
+    <hr>
 
-      <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
-
-      <b-collapse id="nav-collapse" is-nav>
-        <!-- Right aligned nav items -->
-        <b-navbar-nav class="ml-auto">
-          <b-nav-item :to="{ path: '/logout' }">Logout</b-nav-item>
-        </b-navbar-nav>
-      </b-collapse>
-    </b-navbar>
-    <br />
-    <hr />
-    <router-view></router-view>
+    <div class="view" v-if="activeTab == 'Group View'">
+      <div class="left">
+        Group left side
+      </div>
+      <div class="right">
+        Group right side
+      </div>
+    </div>
+    <div class="view" v-else>
+      <div class="left">
+        User left side
+      </div>
+      <div class="right">
+        User right side
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
+import Api from "../api"
+
 export default {
   name: "Admin",
+  data () {
+    return {
+      activeTab: 'Group View'
+    }
+  },
+  created() {
+    Api
+  }
 };
 </script>
+
+<style scoped>
+#container {
+  padding: 25px;
+}
+
+.view {
+  display: grid;
+  grid-template-areas:
+    'left right';
+  grid-template-columns: 49% 49%;
+  gap: 20px;
+  width: 100%;
+  
+}
+
+.left {
+  grid-area: left;
+}
+.right {
+  grid-area: right;
+}
+</style>

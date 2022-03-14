@@ -8,7 +8,7 @@ export default {
   name: "Logout",
   mounted: function () {
     deleteJwtToken();
-    this.$router.push({ path: "/" });
+    this.$router.push({ path: "/login" });
   },
 };
 </script>

@@ -45,6 +45,15 @@
             />
           </div>
           <div class="form-group">
+            <label for="confirm-password">Confirm Password</label>
+            <input
+              v-model="confirm_password"
+              type="password"
+              class="form-control"
+              name="confirm-password"
+            />
+          </div>
+          <div class="form-group">
             <button class="btn btn-primary btn-block" :disabled="loading">
               <span
                 v-show="loading"
@@ -74,12 +83,18 @@ export default {
       lastName: "",
       email: "",
       password: "",
+      confirm_password: "",
       loading: false,
       message: "",
-    };
+    }
   },
   methods: {
     handleRegister() {
+      if (this.password != this.confirm_password) {
+        console.log("ur moom")
+        this.message = "Passwords do not match"
+        return
+      }
       this.message = "";
       this.loading = true;
 
