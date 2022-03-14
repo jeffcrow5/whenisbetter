@@ -1,12 +1,8 @@
 DELETE FROM "User" WHERE UserID = '1';
 
-DELETE FROM "UserDefaultTimes" WHERE WeekDay = 'Sunday' AND Hour = '13' AND UserID = '1';
-
-DELETE FROM "Group" WHERE GroupInviteCode = '123456781234';
+DELETE FROM "Group" WHERE GroupID = '1';
 
 DELETE FROM "GroupHasUser" WHERE UserID = '1' AND GroupID = '1';
-
-DELETE FROM "GroupHasUserTimes" WHERE GroupHasUserID = '1';
 
 DELETE FROM "Event" WHERE EventID = '1' AND GroupID = '1';
 
