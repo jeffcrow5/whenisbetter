@@ -2,19 +2,22 @@ import axios from "axios"
 import { authHeader, getJwtToken, getUserIdFromToken } from "./auth"
 
 const API_URL = "http://54.205.253.120:8000"
-const USER_ID = getUserIdFromToken(getJwtToken())
 
 class Api {
 
+  getUserId() {
+    getUserIdFromToken(getJwtToken())
+  }
+
   getUserProfile() {
     return axios.get(
-      API_URL + `/user_settings?userid=eq.${USER_ID}`
+      API_URL + `/user_settings?userid=eq.${getUserId()}`
     )
   }
 
   setUserDefaultTimes(defaultTimes) {
     return axios.patch(
-      API_URL + `/User?userid=eq.${USER_ID}`,
+      API_URL + `/User?userid=eq.${getUserId()}`,
       {
         defaulttimes: defaultTimes
       },
@@ -26,7 +29,7 @@ class Api {
 
   setUserSettings(firstname, lastname, emailaddress) {
     return axios.patch(
-      API_URL + `/User?userid=eq.${USER_ID}`,
+      API_URL + `/User?userid=eq.${getUserId()}`,
       {
         firstname,
         lastname,
@@ -44,7 +47,7 @@ class Api {
       {
         ...article,
         // add user id from JWT token
-        userid: USER_ID,
+        userid: getUserId(),
       },
       {
         headers: authHeader(),
