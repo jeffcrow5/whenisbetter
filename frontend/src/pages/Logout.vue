@@ -10,7 +10,7 @@ export default {
   mounted: function () {
     deleteJwtToken();
     this.navbarRefresh();
-    this.$router.push({ path: "/" });
+    this.$router.push({ path: "/login" });
   },
 };
 </script>
