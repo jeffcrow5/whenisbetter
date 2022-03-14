@@ -3,11 +3,11 @@ import { authHeader, getJwtToken, getUserIdFromToken } from "./auth"
 
 const API_URL = "http://54.205.253.120:8000"
 
-class Api {
+function getUserId() {
+  getUserIdFromToken(getJwtToken())
+}
 
-  getUserId() {
-    getUserIdFromToken(getJwtToken())
-  }
+class Api {
 
   getUserProfile() {
     return axios.get(
