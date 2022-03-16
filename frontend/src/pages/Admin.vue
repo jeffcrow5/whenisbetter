@@ -38,11 +38,10 @@
         <b-form-select v-model="userSelected" :options="users.map((user) => {return {text: `${user.firstname} ${user.lastname}`, value: user.userid}})" />     
       </div>
       <div class="right">
-        <b-form-checkbox
-          v-model="userSelected.isAdmin"
-        >
+        <b-form-checkbox v-model="userSelected.isAdmin">
           Administrator
         </b-form-checkbox>
+        <b-button variant="danger" @click="deleteUser()">Delete</b-button>
       </div>
     </div>
   </div>
@@ -74,11 +73,6 @@ export default {
       if (newValue != oldValue) {
         this.groupMembers = [{userid: 1, firstname: 'Jeffrey', lastname: 'Crowley'}, {userid: 2, firstname: 'Trevor', lastname: 'McClellan'}, {userid: 3, firstname: 'Josh', lastname: 'Haviland'}]
         // TODO: Api set groupMembers and groupEvents
-      }
-    },
-    userSelected(newValue, oldValue) {
-      if (newValue != oldValue) {
-        this
       }
     }
   }
