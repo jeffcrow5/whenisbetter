@@ -24,6 +24,9 @@ export default {
     };
   },
   created() {
+    if (!localStorage.getItem('accessToken')) {
+      this.$router
+    }
   },
 };
 </script>
