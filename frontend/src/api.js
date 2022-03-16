@@ -4,7 +4,7 @@ import { authHeader, getJwtToken, getUserIdFromToken } from "./auth"
 const API_URL = "http://54.205.253.120:8000"
 
 function getUserId() {
-  getUserIdFromToken(getJwtToken())
+  return getUserIdFromToken(getJwtToken())
 }
 
 class Api {
@@ -185,6 +185,9 @@ class Api {
         emailaddress,
         userpassword,
         isadmin: 0
+      },
+      {
+        headers: authHeader()
       }
     )
   }
@@ -243,14 +246,18 @@ class Api {
     )
   }
 
+  getCurrentUser() {
+    return axios.get(
+      API_URL + `/User?userid=eq.${getUserId()}`
+    )
+  }
+
   login(email, password) {
     return axios.post(API_URL + "/rpc/login", { email, password });
   }
 
   signup(firstname, lastname, email, password) {
-    this.registerUser(firstname, lastname, email, password).then(() => {
-      return axios.post(API_URL + "/rpc/signup", { firstname, lastname, email, password })
-    })
+    return axios.post(API_URL + "/rpc/signup", { firstname, lastname, email, password })
   }
 }
 

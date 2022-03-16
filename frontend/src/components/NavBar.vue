@@ -9,8 +9,13 @@
 
       <b-collapse id="nav-collapse" is-nav>
         <b-navbar-nav>
-          <b-nav-item v-if="loggedIn" :to="{ path: '/myStuff' }"
-            >My Stuff</b-nav-item
+          <b-nav-item v-if="loggedIn" :to="{ path: '/' }"
+            >Home</b-nav-item
+          >
+        </b-navbar-nav>
+         <b-navbar-nav>
+          <b-nav-item v-if="isAdmin" :to="{ path: '/admin' }"
+            >Admin Settings</b-nav-item
           >
         </b-navbar-nav>
         <b-navbar-nav>
@@ -39,6 +44,8 @@
 
 <script>
 import { getJwtToken } from "../auth";
+import Api from "../api";
+
 export default {
   name: "NavBar",
   components: {},
@@ -49,12 +56,21 @@ export default {
     };
   },
   mounted: function () {
+      this.checkAdmin()
   },
   methods: {
     logout() {
       this.$router.push("/logout");
       this.loggedin = false;
     },
+
+    checkAdmin() {
+        Api.getCurrentUser().then((response) => {
+            console.log(response)
+            this.user = response.data;
+            this.isAdmin = this.user[0].isadmin;
+        });
+    }
   },
    computed: {
     loggedIn: function () {

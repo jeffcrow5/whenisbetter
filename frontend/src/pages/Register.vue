@@ -74,7 +74,7 @@
 
 <script>
 import Api from "../api";
-import { setJwtToken } from "../auth"
+import { setJwtToken } from "../auth";
 export default {
   name: "Register",
   props: ["navbarRefresh"],
@@ -87,14 +87,14 @@ export default {
       confirm_password: "",
       loading: false,
       message: "",
-    }
+    };
   },
   methods: {
     handleRegister() {
       if (this.password != this.confirm_password) {
-        console.log("ur moom")
-        this.message = "Passwords do not match"
-        return
+        console.log("ur moom");
+        this.message = "Passwords do not match";
+        return;
       }
       this.message = "";
       this.loading = true;
@@ -102,17 +102,17 @@ export default {
       Api.signup(this.firstName, this.lastName, this.email, this.password)
         .then(() => {
           Api.login(this.email, this.password)
-          .then((res) => {
-            setJwtToken(res.data[0].token);
-            this.navbarRefresh();
-            this.$router.push("/");
-          })
-          .catch((error) => {
-            console.log(error);
-            if (error.response && error.response.status === 403) {
-              this.message = error.response.data.message;
-            }
-          });
+            .then((res) => {
+              setJwtToken(res.data[0].token);
+              this.navbarRefresh();
+              this.$router.push("/");
+            })
+            .catch((error) => {
+              console.log(error);
+              if (error.response && error.response.status === 403) {
+                this.message = error.response.data.message;
+              }
+            });
         })
         .catch((error) => {
           console.log(error);
