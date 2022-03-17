@@ -11,7 +11,27 @@
         stacked
       ></b-form-radio-group>
       <!-- FIXME: Make API call(s) to add group via invite code -->
-      <b-button class="mt-auto">+ Join Group</b-button>
+      <b-button @click="openModal" class="mt-auto">+ Join Group</b-button>
+      <b-modal
+      size="md"
+      title="Enter Group Invite Code"
+      id="join-group-modal"
+      @ok="joinGroup">
+        <b-form
+          @submit.prevent="
+            joinGroup();
+            $bvModal.hide('join-group-modal')
+          "
+        >
+          <b-form-group label="Invite Code" label-for="invite-code-input">
+            <b-form-input
+              id="invite-code-input"
+              v-model="groupInviteCode"
+              autocomplete="off"
+            />
+          </b-form-group>
+        </b-form>
+      </b-modal>
     </div>
 
     <div v-if="Object.keys(selectedEvent).length === 0" class="main-group-panel">
@@ -50,7 +70,7 @@
     <div class="group-info">
       <h3>Group Members</h3>
       <div v-for="(member, index) in groupMembers" :key="index">
-        {{member}}
+        {{`${member.firstname} ${member.lastname}`}}
       </div>
     </div>
     
@@ -59,6 +79,7 @@
 
 <script>
 import Api from "../api"
+import { getJwtToken, getUserIdFromToken } from "../auth"
 
 export default {
   name: "Home",
@@ -69,7 +90,8 @@ export default {
       selectedGroup: {},
       groupMembers: [],
       groupEvents: [],
-      selectedEvent: {}
+      selectedEvent: {},
+      groupInviteCode: ''
     };
   },
   beforeCreated() {
@@ -79,20 +101,23 @@ export default {
     }
   },
   created() {
-    // FIXME: Set these to the stuff associated with the first group in the user's groups
-    this.groupMembers = ['Jeffrey Crowley', 'Trevor McClellan']
-    this.groupEvents = [{eventname: 'Event 1', eventdesc: 'This is a description', eventstarttime: 'March 17, 2022 at 3:30 PM'}, {eventname: 'Event 2', eventdesc: 'This is another description', eventstarttime: 'March 21, 2022 at 9:30 AM'}]
+    Api.getUserGroups().then(response => {
+        this.groups = response.data
+        this.selectedGroup = this.groups[0]
+      })
   },
   watch: {
     selectedGroup(newValue, oldValue) {
       if (newValue != oldValue) {
-        // FIXME: Make API calls to set groupMembers and groupEvents
-        this.groupMembers = ['Jeffrey Crowley', 'Trevor McClellan']
-        this.groupEvents = [{eventname: 'Event 1', eventdesc: 'This is a description', eventstarttime: '10'}, {eventname: 'Event 2', eventdesc: 'This is another description', eventstarttime: '20'}]
+        this.getGroupMembers(newValue.groupid)
+        this.getGroupEvents(newValue.groupid)
       }
     }
   },
   methods: {
+    openModal() {
+      this.$bvModal.show('join-group-modal')
+    },
     setSelectedEvent(event) {
       this.selectedEvent = event
     },
@@ -106,6 +131,30 @@ export default {
     userUnattendsEvent() {
       Api.unattendEvent(this.selectedEvent.eventid)
       // TODO: Add some visual feedback
+    },
+    getUserGroups() {
+      Api.getUserGroups().then(response => {
+        this.groups = response.data
+      })
+    },
+    getGroupMembers(groupID) {
+      Api.getGroupMembers(groupID).then(response => {
+          this.groupMembers = response.data
+        })
+    },
+    getGroupEvents(groupID) {
+      Api.getGroupEvents(groupID).then(response => {
+          this.groupEvents = response.data
+        })
+    },
+    joinGroup() {
+      Api.getGroupFromInviteCode(this.groupInviteCode).then(response => {
+        let group = response.data[0]
+        let userid = getUserIdFromToken(getJwtToken())
+        Api.addUserToGroup(userid, group.groupid).then(() => {
+          this.getUserGroups()
+        })
+      })
     }
   }
 };

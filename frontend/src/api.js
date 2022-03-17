@@ -234,9 +234,9 @@ class Api {
     )
   }
 
-  getUserGroups(userid) {
+  getUserGroups() {
     return axios.get(
-      API_URL + `/user_groups?userid=eq.${userid}`
+      API_URL + `/user_groups?userid=eq.${getUserId()}`
     )
   }
 
