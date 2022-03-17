@@ -10,8 +10,9 @@
         button-variant="outline-primary"
         stacked
       ></b-form-radio-group>
-      <!-- FIXME: Make API call(s) to add group via invite code -->
-      <b-button @click="openModal" class="mt-auto">+ Join Group</b-button>
+
+      <b-button variant="primary" @click="openModal('join-group-modal')" class="mt-auto">+ Join Group</b-button>
+      <b-button variant="success" @click="openModal('create-group-modal')" class="mt-2">+ Create Group</b-button>
       <b-modal
       size="md"
       title="Enter Group Invite Code"
@@ -27,6 +28,44 @@
             <b-form-input
               id="invite-code-input"
               v-model="groupInviteCode"
+              autocomplete="off"
+            />
+          </b-form-group>
+        </b-form>
+      </b-modal>
+
+      <b-modal
+      size="md"
+      title="Enter Group Info"
+      id="create-group-modal"
+      @ok="createGroup">
+        <b-form
+          @submit.prevent="
+            createGroup();
+            $bvModal.hide('create-group-modal')
+          "
+        >
+          <b-form-group label="Group Name" label-for="group-name-input">
+            <b-form-input
+              id="group-name-input"
+              v-model="createGroupForm.groupname"
+              autocomplete="off"
+              required
+            />
+          </b-form-group>
+
+          <b-form-group label="Group Description" label-for="group-desc-input" description="Optional">
+            <b-form-input
+              id="group-desc-input"
+              v-model="createGroupForm.groupdesc"
+              autocomplete="off"
+            />
+          </b-form-group>
+
+          <b-form-group label="Group Image URL" label-for="group-image-input" description="Optional">
+            <b-form-input
+              id="group-image-input"
+              v-model="createGroupForm.groupimage"
               autocomplete="off"
             />
           </b-form-group>
@@ -60,7 +99,7 @@
         </p>
         
         <div class="text-center">Going?<br>
-        <b-button variant="success" @click="userAttendsEvent">Yes</b-button>
+        <b-button :variant="'success'" @click="userAttendsEvent">Yes</b-button>
         <b-button variant="danger" @click="userUnattendsEvent">No</b-button>
         </div>
       </b-jumbotron>
@@ -72,6 +111,64 @@
       <div v-for="(member, index) in groupMembers" :key="index">
         {{`${member.firstname} ${member.lastname}`}}
       </div>
+      <b-button variant="success" @click="openModal('create-event-modal')">
+        + Create Event
+      </b-button>
+      <b-modal
+      size="md"
+      title="Enter Event Info"
+      id="create-event-modal"
+      @ok="createEvent">
+        <b-form
+          @submit.prevent="
+            createEvent();
+            $bvModal.hide('create-event-modal')
+          "
+        >
+          <b-form-group label="Event Name" label-for="event-name-input">
+            <b-form-input
+              id="event-name-input"
+              v-model="createEventForm.eventname"
+              autocomplete="off"
+              required
+            />
+          </b-form-group>
+
+          <b-form-group label="Event Description" label-for="event-desc-input" description="Optional">
+            <b-form-input
+              id="event-desc-input"
+              v-model="createEventForm.eventdesc"
+              autocomplete="off"
+            />
+          </b-form-group>
+
+          <b-form-group label="Event Duration" label-for="event-duration-input">
+            <b-form-input
+              id="event-duration-input"
+              v-model="createEventForm.eventduration"
+              autocomplete="off"
+              required
+            />
+          </b-form-group>
+
+          <b-form-group label="Event Start Time" label-for="event-start-time-input">
+            <b-form-input
+              id="event-start-time-input"
+              v-model="createEventForm.eventstarttime"
+              autocomplete="off"
+              required
+            />
+          </b-form-group>
+        </b-form>
+      </b-modal>
+      <b-button class="mt-auto" variant="danger" @click="leaveGroup()">
+        Leave Group
+      </b-button>
+      <h3 class="text-center">
+        Invite Code<br>
+        {{selectedGroup.groupinvitecode}}
+      </h3>
+
     </div>
     
   </div>
@@ -80,6 +177,7 @@
 <script>
 import Api from "../api"
 import { getJwtToken, getUserIdFromToken } from "../auth"
+import {v4 as uuidv4} from 'uuid'
 
 export default {
   name: "Home",
@@ -87,11 +185,31 @@ export default {
     return {
       // FIXME: Remove these once proper API calls have been made
       groups: [{groupid: 1, groupname: 'Group 1'}, {groupid: 2, groupname: 'Group 2'}, {groupid: 3, groupname: 'Group 17'}],
-      selectedGroup: {},
+      selectedGroup: {
+        groupname: '',
+        groupdesc: '',
+        groupinvitecode: '',
+        groupadmin: '',
+        groupimage: ''
+      },
       groupMembers: [],
       groupEvents: [],
       selectedEvent: {},
-      groupInviteCode: ''
+      groupInviteCode: '',
+      activeGroupInviteCode: '',
+      createGroupForm: {
+        groupname: '',
+        groupdesc: '',
+        groupinvitecode: '',
+        groupadmin: '',
+        groupimage: ''
+      },
+      createEventForm: {
+        eventname: '',
+        eventdesc: '',
+        eventduration: '',
+        eventstarttime: ''
+      }
     };
   },
   beforeCreated() {
@@ -115,8 +233,8 @@ export default {
     }
   },
   methods: {
-    openModal() {
-      this.$bvModal.show('join-group-modal')
+    openModal(modal) {
+      this.$bvModal.show(modal)
     },
     setSelectedEvent(event) {
       this.selectedEvent = event
@@ -135,6 +253,9 @@ export default {
     getUserGroups() {
       Api.getUserGroups().then(response => {
         this.groups = response.data
+        if (this.groups.length) {
+          this.selectedGroup = this.groups[0]
+        }
       })
     },
     getGroupMembers(groupID) {
@@ -144,8 +265,8 @@ export default {
     },
     getGroupEvents(groupID) {
       Api.getGroupEvents(groupID).then(response => {
-          this.groupEvents = response.data
-        })
+        this.groupEvents = response.data
+      })
     },
     joinGroup() {
       Api.getGroupFromInviteCode(this.groupInviteCode).then(response => {
@@ -154,6 +275,43 @@ export default {
         Api.addUserToGroup(userid, group.groupid).then(() => {
           this.getUserGroups()
         })
+      })
+    },
+    leaveGroup() {
+      let userid = getUserIdFromToken(getJwtToken())
+      Api.removeUserFromGroup(userid, this.selectedGroup.groupid)
+      .then(() => {
+        this.getUserGroups()
+      })
+    },
+    createGroup() {
+      let userid = getUserIdFromToken(getJwtToken())
+      // FIXME: Generate unique invite code 
+      let groupinvitecode = uuidv4().slice(0, 12)
+      console.log(groupinvitecode)
+
+      Api.createGroup(this.createGroupForm.groupname, this.createGroupForm.groupdesc, groupinvitecode, userid, this.createGroupForm.groupimage)
+      .then(() => {
+        this.createGroupForm = {
+          groupname: '',
+          groupdesc: '',
+          groupinvitecode: '',
+          groupadmin: '',
+          groupimage: ''
+        }
+        this.groupInviteCode = groupinvitecode
+        this.joinGroup()
+      })
+    },
+    createEvent() {
+      Api.createEvent(this.createEventForm.eventname, this.createEventForm.eventdesc, this.createEventForm.eventduration, this.createEventForm.eventstarttime, this.selectedGroup.groupid)
+      .then(() => {
+        this.createEventForm = {
+          eventname: '',
+          eventdesc: '',
+          eventduration: '',
+          eventstarttime: ''
+        }
       })
     }
   }

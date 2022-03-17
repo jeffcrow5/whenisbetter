@@ -66,7 +66,7 @@ export default {
 
     checkAdmin() {
         Api.getCurrentUser().then((response) => {
-            console.log(response)
+            // console.log(response)
             this.user = response.data;
             this.isAdmin = this.user[0].isadmin;
         });
