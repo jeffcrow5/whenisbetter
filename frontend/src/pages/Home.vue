@@ -96,7 +96,8 @@
         <hr class="my-4">
 
         <p>
-          Start time: {{new Date(selectedEvent.eventstarttime).toLocaleTimeString()}}
+          {{new Date(selectedEvent.eventstarttime).toLocaleDateString()}} <br>
+          {{getTimeRange(selectedEvent)}}
         </p>
         
         <div class="text-center">Going?<br>
