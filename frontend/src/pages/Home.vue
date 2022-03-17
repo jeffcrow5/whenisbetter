@@ -79,7 +79,8 @@
           {{event.eventdesc}} 
         </b-card-text>
         <b-card-text>
-          {{`Start time: ${new Date(event.eventstarttime).toLocaleTimeString()}`}}
+          {{new Date(event.eventstarttime).toLocaleDateString()}} <br>
+          {{getTimeRange(event)}}
         </b-card-text>
       </b-card>
     </div>
@@ -151,13 +152,19 @@
             />
           </b-form-group>
 
+          <b-form-group label="Event Start Date" label-for="event-start-date-input">
+            <b-form-datepicker 
+              id="event-start-date-input" 
+              v-model="createEventForm.eventstartdate" 
+              class="mb-2"
+              required></b-form-datepicker>
+          </b-form-group>
           <b-form-group label="Event Start Time" label-for="event-start-time-input">
-            <b-form-input
-              id="event-start-time-input"
-              v-model="createEventForm.eventstarttime"
-              autocomplete="off"
-              required
-            />
+            <b-form-timepicker 
+              id="event-start-time-input" 
+              v-model="createEventForm.eventstarttime" 
+              class="mb-2"
+              required></b-form-timepicker>
           </b-form-group>
         </b-form>
       </b-modal>
@@ -208,7 +215,8 @@ export default {
         eventname: '',
         eventdesc: '',
         eventduration: '',
-        eventstarttime: ''
+        eventstarttime: '',
+        eventstartdate: ''
       }
     };
   },
@@ -233,6 +241,12 @@ export default {
     }
   },
   methods: {
+    getTimeRange(event) {
+      let startTime = new Date(event.eventstarttime)
+      let endTime = new Date(event.eventstarttime)
+      endTime.setHours( startTime.getHours() + event.eventduration );
+      return `${startTime.toLocaleTimeString()} - ${endTime.toLocaleTimeString()}`
+    },
     openModal(modal) {
       this.$bvModal.show(modal)
     },
@@ -304,14 +318,17 @@ export default {
       })
     },
     createEvent() {
-      Api.createEvent(this.createEventForm.eventname, this.createEventForm.eventdesc, this.createEventForm.eventduration, this.createEventForm.eventstarttime, this.selectedGroup.groupid)
+      let datetime = new Date(this.createEventForm.eventstartdate+' '+this.createEventForm.eventstarttime);
+      Api.createEvent(this.createEventForm.eventname, this.createEventForm.eventdesc, this.createEventForm.eventduration, datetime, this.selectedGroup.groupid)
       .then(() => {
         this.createEventForm = {
           eventname: '',
           eventdesc: '',
           eventduration: '',
-          eventstarttime: ''
+          eventstarttime: '',
+          eventstartdate: ''
         }
+        this.getGroupEvents(this.selectedGroup.groupid)
       })
     }
   }
