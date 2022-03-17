@@ -9,7 +9,7 @@ INNER JOIN "GroupHasUser" ON "User".UserID = "GroupHasUser".UserID
 INNER JOIN "Group" ON "Group".GroupID = "GroupHasUser".GroupID;
 
 CREATE OR REPLACE VIEW user_individual_group_info AS
-SELECT "Group".GroupID, "Group".GroupName, "Group".GroupDesc, "Group".GroupInviteCode, "Group".GroupImage, "Group".GroupAdmin
+SELECT "Group".GroupID, "Group".GroupName, "Group".GroupDesc, "Group".GroupInviteCode, "Group".GroupImage, "Group".GroupAdmin, "User".UserID
 FROM "Group"
 INNER JOIN "GroupHasUser" ON "GroupHasUser".GroupID = "Group".GroupID
 INNER JOIN "User" ON "GroupHasUser".UserID = "User".UserID;
