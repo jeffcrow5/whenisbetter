@@ -40,7 +40,7 @@
           {{event.eventdesc}} 
         </b-card-text>
         <b-card-text>
-          {{`Start time: ${event.eventstarttime}`}}
+          {{`Start time: ${new Date(event.eventstarttime).toLocaleTimeString()}`}}
         </b-card-text>
       </b-card>
     </div>
@@ -56,7 +56,7 @@
         <hr class="my-4">
 
         <p>
-          Start time: {{selectedEvent.eventstarttime}}
+          Start time: {{new Date(selectedEvent.eventstarttime).toLocaleTimeString()}}
         </p>
         
         <div class="text-center">Going?<br>
