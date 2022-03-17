@@ -45,9 +45,9 @@ class Api {
     return axios.get(API_URL + "/Group");
   }
 
-  toggleUserAdmin(isadmin) {
+  toggleUserAdmin(userid, isadmin) {
     return axios.patch(
-      API_URL + `/User?userid=eq.${getUserId()}`,
+      API_URL + `/User?userid=eq.${userid}`,
       {
         isadmin
       },
@@ -218,13 +218,13 @@ class Api {
 
   getGroupMembers(groupid) {
     return axios.get(
-      API_URL + `/GroupHasUser?groupid=eq.${groupid}`
+      API_URL + `/group_members?groupid=eq.${groupid}`
     )
   }
 
   getGroupEvents(groupid) {
     return axios.get(
-      API_URL + `/GroupHasEvent?groupid=eq.${groupid}`
+      API_URL + `/user_individual_group_events?groupid=eq.${groupid}`
     )
   }
 
