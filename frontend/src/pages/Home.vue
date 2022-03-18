@@ -10,6 +10,9 @@
         button-variant="outline-primary"
         stacked
       ></b-form-radio-group>
+      <div>
+        {{selectedGroup.groupdesc}}
+      </div>
 
       <b-button variant="primary" @click="openModal('join-group-modal')" class="mt-auto">+ Join Group</b-button>
       <b-button variant="success" @click="openModal('create-group-modal')" class="mt-2">+ Create Group</b-button>
@@ -104,6 +107,7 @@
         <b-button :variant="'success'" @click="userAttendsEvent">Yes</b-button>
         <b-button variant="danger" @click="userUnattendsEvent">No</b-button>
         </div>
+        <b-button variant="danger" @click="deleteEvent">Delete Event</b-button>
       </b-jumbotron>
       <b-button @click="clearSelectedEvent">Back</b-button>
     </div>
@@ -259,6 +263,14 @@ export default {
     userUnattendsEvent() {
       Api.unattendEvent(this.selectedEvent.eventid)
       // TODO: Add some visual feedback
+    },
+    deleteEvent() {
+      console.log(this.selectedEvent)
+      Api.removeEvent(this.selectedEvent.eventid)
+      .then(() => {
+        this.getGroupEvents(this.selectedGroup.groupid)
+        this.clearSelectedEvent()
+      })
     },
     getUserGroups() {
       Api.getUserGroups().then(response => {
