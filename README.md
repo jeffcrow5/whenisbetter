@@ -11,5 +11,5 @@ WhenIsBetter’s frontend is based on a Yarn-based Vue.js framework. The applica
 ## 2. Functionality
 
 ### Admin Panel
-![Admin Panel Group View](/screenshots/Admin Panel Group View.png)
+![Admin Panel Group View](/screenshots/Admin%20Panel%20Group%20View.png)
 Users who have administrator status have the ability to see a full list of all users, the groups they are in, and the events that exist within those groups. 
