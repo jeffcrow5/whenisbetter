@@ -123,12 +123,13 @@ class Api {
     )
   }
 
-  addUserToGroup(userid, groupid) {
+  addUserToGroup(userid, groupid, grouptimes) {
     return axios.post(
       API_URL + `/GroupHasUser`,
       {
         userid,
-        groupid
+        groupid,
+        grouptimes
       },
       {
         headers: authHeader()
