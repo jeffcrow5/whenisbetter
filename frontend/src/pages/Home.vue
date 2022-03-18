@@ -215,9 +215,9 @@
           {{getTimeRange(selectedEvent)}}
         </p>
         
-        <div class="text-center">Going?<br>
-        <b-button :variant="'success'" @click="userAttendsEvent" :disabled="userAttendingEvent">Yes</b-button>
-        <b-button variant="danger" @click="userUnattendsEvent" :disabled="!userAttendingEvent">No</b-button>
+        <div class="text-center"><p class="mb-1">Going?</p>
+          <b-button :variant="userAttendingEvent ? 'success' : 'outline-success'" @click="userAttendsEvent" class="mr-1">Yes</b-button>
+          <b-button :variant="!userAttendingEvent ? 'danger' : 'outline-danger'" @click="userUnattendsEvent">No</b-button>
         </div>
         <b-button variant="danger" @click="deleteEvent">Delete Event</b-button>
       </b-jumbotron>
@@ -292,7 +292,7 @@
       <b-button class="mt-auto" variant="success" @click="openModal('create-event-modal')">
         + Create Event
       </b-button>
-      <h3 class="text-center">
+      <h3 class="text-center mt-3">
         Invite Code<br>
         {{selectedGroup.groupinvitecode}}
       </h3>
@@ -312,10 +312,9 @@ import {v4 as uuidv4} from 'uuid'
 
 export default {
   name: "Home",
-  data: function () {
+  data () {
     return {
-      // FIXME: Remove these once proper API calls have been made
-      groups: [{groupid: 1, groupname: 'Group 1'}, {groupid: 2, groupname: 'Group 2'}, {groupid: 3, groupname: 'Group 17'}],
+      groups: [],
       selectedGroup: {
         groupname: '',
         groupdesc: '',
@@ -386,6 +385,7 @@ export default {
   watch: {
     selectedGroup(newValue, oldValue) {
       if (newValue != oldValue) {
+        this.clearSelectedEvent()
         this.getGroupMembers(newValue.groupid)
         this.getGroupEvents(newValue.groupid)
       }
@@ -445,7 +445,6 @@ export default {
       this.userAttendingEvent = false
     },
     deleteEvent() {
-      console.log(this.selectedEvent)
       Api.removeEvent(this.selectedEvent.eventid)
       .then(() => {
         this.getGroupEvents(this.selectedGroup.groupid)
@@ -506,9 +505,7 @@ export default {
     },
     createGroup() {
       let userid = getUserIdFromToken(getJwtToken())
-      // FIXME: Generate unique invite code 
       let groupinvitecode = uuidv4().slice(0, 12)
-      console.log(groupinvitecode)
 
       Api.createGroup(this.createGroupForm.groupname, this.createGroupForm.groupdesc, groupinvitecode, userid, this.createGroupForm.groupimage)
       .then(() => {
