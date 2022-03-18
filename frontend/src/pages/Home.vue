@@ -314,7 +314,7 @@ export default {
       })
     },
     createEvent() {
-      let datetime = new Date(this.createEventForm.eventstartdate+' '+this.createEventForm.eventstarttime);
+      let datetime = this.createEventForm.eventstartdate+'T'+this.createEventForm.eventstarttime
       Api.createEvent(this.createEventForm.eventname, this.createEventForm.eventdesc, this.createEventForm.eventduration, datetime, this.selectedGroup.groupid)
       .then(() => {
         this.createEventForm = {
@@ -352,6 +352,7 @@ export default {
   display: flex;
   justify-content: space-around;
   padding: 30px;
+  flex-wrap: wrap;
 }
 .selected-event-panel {
   grid-area: main-panel;
