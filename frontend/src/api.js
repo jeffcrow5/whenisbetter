@@ -27,13 +27,13 @@ class Api {
     )
   }
 
-  updateUserSettings(firstname, lastname, emailaddress) {
+  updateUserSettings(firstname, lastname, defaulttimes) {
     return axios.patch(
       API_URL + `/User?userid=eq.${getUserId()}`,
       {
         firstname,
         lastname,
-        emailaddress
+        defaulttimes
       },
       {
         headers: authHeader()
