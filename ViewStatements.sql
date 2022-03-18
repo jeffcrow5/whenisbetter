@@ -3,7 +3,7 @@ SELECT FirstName, LastName
 FROM "User";
 
 CREATE OR REPLACE VIEW user_groups AS
-SELECT "Group".GroupName, "User".UserID, "Group".GroupID, "Group".GroupInviteCode
+SELECT "Group".GroupName, "User".UserID, "Group".GroupID, "Group".GroupInviteCode, "Group".GroupDesc
 FROM "User"
 INNER JOIN "GroupHasUser" ON "User".UserID = "GroupHasUser".UserID
 INNER JOIN "Group" ON "Group".GroupID = "GroupHasUser".GroupID;
