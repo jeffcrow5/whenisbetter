@@ -144,12 +144,13 @@
             />
           </b-form-group>
 
-          <b-form-group label="Event Duration" label-for="event-duration-input">
+          <b-form-group label="Event Duration (hours)" label-for="event-duration-input">
             <b-form-input
               id="event-duration-input"
               v-model="createEventForm.eventduration"
               autocomplete="off"
               required
+              type="number"
             />
           </b-form-group>
 
@@ -220,12 +221,6 @@ export default {
         eventstartdate: ''
       }
     };
-  },
-  beforeCreated() {
-    // If not logged in reroute to login page
-    if (!localStorage.getItem('accessToken')) {
-      this.$router.push({path: '/login'})
-    }
   },
   created() {
     Api.getUserGroups().then(response => {

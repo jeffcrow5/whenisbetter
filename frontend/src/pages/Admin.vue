@@ -1,5 +1,5 @@
 <template>
-  <div id="container">
+  <div id="container" v-if="isCurrentUserAdmin">
     <b-form-radio-group
       buttons
       button-variant="outline-primary"
@@ -61,12 +61,23 @@ export default {
       groupEvents: [],
       userSelected: null,
       isAdmin: false,
+      isCurrentUserAdmin: false,
       users: [{userid: 1, firstname: 'Jeffrey', lastname: 'Crowley'}, {userid: 2, firstname: 'Trevor', lastname: 'McClellan'}, {userid: 3, firstname: 'Josh', lastname: 'Haviland'}, {userid: 4, firstname: 'Derek', lastname: 'Hansen'}]
     }
   },
   created() {
-    this.getGroups()
-    this.getUsers()
+    Api.getCurrentUser().then((response) => {
+        this.isCurrentUserAdmin = response.data[0].isadmin;
+        console.log(this.isCurrentUserAdmin);
+        if (this.isCurrentUserAdmin) {
+          this.getGroups()
+          this.getUsers()
+        }
+        else {
+          this.$router.push('/')
+        }
+    });
+    
   },
   watch: {
     groupSelected(newValue, oldValue) {

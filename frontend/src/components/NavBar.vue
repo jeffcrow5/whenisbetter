@@ -31,11 +31,14 @@
 
         <!-- Right aligned nav items -->
         <b-navbar-nav class="ml-auto">
-          <b-navbar-nav>
-            <b-nav-item v-if="loggedIn" @click="logout()"
-              >Sign Out</b-nav-item
-            >
-          </b-navbar-nav>
+          <b-nav-item-dropdown v-if="loggedIn" right>
+            <!-- Using 'button-content' slot -->
+            <template #button-content>
+              {{user.firstname}} {{user.lastname}}
+            </template>
+            <b-dropdown-item href="#/profile">Settings</b-dropdown-item>
+            <b-dropdown-item @click="logout()">Sign Out</b-dropdown-item>
+          </b-nav-item-dropdown>
         </b-navbar-nav>
       </b-collapse>
     </b-navbar>
@@ -66,9 +69,8 @@ export default {
 
     checkAdmin() {
         Api.getCurrentUser().then((response) => {
-            // console.log(response)
-            this.user = response.data;
-            this.isAdmin = this.user[0].isadmin;
+            this.user = response.data[0];
+            this.isAdmin = this.user.isadmin;
         });
     }
   },
