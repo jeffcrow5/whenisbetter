@@ -41,7 +41,16 @@
       size="xl"
       :title="newGroupTitle"
       id="group-times-modal"
-      @ok="setGroupTimes">
+      @ok="setGroupTimes"
+      @close="setTimes(user)"
+      @hide="setTimes(user)">
+      <b-overlay 
+        :show="groupTimes"
+        opacity="0"
+        blur="0">
+        <template #overlay>
+          <div></div>
+        </template>
         <b-form
           @submit.prevent="
             setGroupTimes();
@@ -140,6 +149,7 @@
             ></b-form-checkbox-group>
           </b-form-group>
         </b-form>
+        </b-overlay>
       </b-modal>
 
       <b-modal
@@ -219,7 +229,7 @@
 
     <div class="group-info">
       <h3>Group Members</h3>
-      <div v-for="(member, index) in groupMembers" :key="index">
+      <div v-for="(member, index) in groupMembers" :key="index" @click="showMemberSchedule(member)">
         {{`${member.firstname} ${member.lastname}`}}
       </div>
       <b-button variant="success" @click="openModal('create-event-modal')">
@@ -330,6 +340,7 @@ export default {
         eventstartdate: ''
       },
       userAttendingEvent: false,
+      groupTimes: false,
       newGroup: {},
       newGroupTitle: '',
       user: {},
@@ -366,14 +377,7 @@ export default {
     })
     Api.getCurrentUser().then(response => {
       this.user = response.data[0]
-      let defaulttimes = response.data[0].defaulttimes
-      this.monday = defaulttimes.monday || []
-      this.tuesday = defaulttimes.tuesday || []
-      this.wednesday = defaulttimes.wednesday || []
-      this.thursday = defaulttimes.thursday || []
-      this.friday = defaulttimes.friday || []
-      this.saturday = defaulttimes.saturday || []
-      this.sunday = defaulttimes.sunday || []
+      this.setTimes(this.user)
     })
   },
   watch: {
@@ -390,6 +394,27 @@ export default {
       let endTime = new Date(event.eventstarttime)
       endTime.setHours( startTime.getHours() + event.eventduration );
       return `${startTime.toLocaleTimeString()} - ${endTime.toLocaleTimeString()}`
+    },
+    showMemberSchedule(member) {
+      this.setTimes(member)
+      this.$bvModal.show('group-times-modal')
+    },
+    setTimes(user) {
+      let defaulttimes = user.defaulttimes
+      if (user.defaulttimes) {
+        this.groupTimes = false
+      }
+      else {
+        this.groupTimes = true
+        defaulttimes = user.grouptimes
+      }
+      this.monday = defaulttimes.monday || []
+      this.tuesday = defaulttimes.tuesday || []
+      this.wednesday = defaulttimes.wednesday || []
+      this.thursday = defaulttimes.thursday || []
+      this.friday = defaulttimes.friday || []
+      this.saturday = defaulttimes.saturday || []
+      this.sunday = defaulttimes.sunday || []
     },
     openModal(modal) {
       this.$bvModal.show(modal)
@@ -466,14 +491,7 @@ export default {
       Api.addUserToGroup(this.user.userid, this.newGroup.groupid, grouptimes).then(() => {
         this.getUserGroups()
         this.newGroupTitle = ''
-        this.newGroup = {}
-        this.monday = []
-        this.tuesday = []
-        this.wednesday = []
-        this.thursday = []
-        this.friday = []
-        this.saturday = []
-        this.sunday = []
+        this.setTimes(this.user)
       })
     },
     leaveGroup() {
