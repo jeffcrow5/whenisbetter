@@ -104,8 +104,8 @@
         </p>
         
         <div class="text-center">Going?<br>
-        <b-button :variant="'success'" @click="userAttendsEvent">Yes</b-button>
-        <b-button variant="danger" @click="userUnattendsEvent">No</b-button>
+        <b-button :variant="'success'" @click="userAttendsEvent" :disabled="userAttendingEvent">Yes</b-button>
+        <b-button variant="danger" @click="userUnattendsEvent" :disabled="!userAttendingEvent">No</b-button>
         </div>
         <b-button variant="danger" @click="deleteEvent">Delete Event</b-button>
       </b-jumbotron>
@@ -223,7 +223,8 @@ export default {
         eventduration: '',
         eventstarttime: '',
         eventstartdate: ''
-      }
+      },
+      userAttendingEvent: false,
     };
   },
   created() {
@@ -251,18 +252,26 @@ export default {
       this.$bvModal.show(modal)
     },
     setSelectedEvent(event) {
-      this.selectedEvent = event
+      Api.isUserAttendingEvent(event.eventid).then(response => {
+        if (response.data.length != 0) {
+          this.userAttendingEvent = true
+        }
+        else {
+          this.userAttendingEvent = false
+        }
+        this.selectedEvent = event
+      })
     },
     clearSelectedEvent() {
       this.selectedEvent = {}
     },
     userAttendsEvent() {
       Api.attendEvent(this.selectedEvent.eventid)
-      // TODO: Add some visual feedback
+      this.userAttendingEvent = true
     },
     userUnattendsEvent() {
       Api.unattendEvent(this.selectedEvent.eventid)
-      // TODO: Add some visual feedback
+      this.userAttendingEvent = false
     },
     deleteEvent() {
       console.log(this.selectedEvent)

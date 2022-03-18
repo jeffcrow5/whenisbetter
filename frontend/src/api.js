@@ -216,6 +216,12 @@ class Api {
     )
   }
 
+  isUserAttendingEvent(eventid) {
+    return axios.get(
+      API_URL + `/user_attends_events?userid=eq.${getUserId()}&eventid=eq.${eventid}`
+    )
+  }
+
   getGroupMembers(groupid) {
     return axios.get(
       API_URL + `/group_members?groupid=eq.${groupid}`
