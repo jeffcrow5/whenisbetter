@@ -1,6 +1,6 @@
 # WhenIsBetter API Documentation
 
-This repository contains the documentation for WhenIsBetter’s frontend.
+This repository contains the documentation for WhenIsBetter’s API.
 
 #### Contents
 
