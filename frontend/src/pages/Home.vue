@@ -231,7 +231,7 @@
           {{selectedGroup.groupdesc}}
         </div> <br>
       </div>
-      <h3>Group Members</h3>
+      <h3 v-if="selectedGroup.groupid">Group Members</h3>
       <div v-for="(member, index) in groupMembers" :key="index" @click="showMemberSchedule(member)" role="button">
         {{`${member.firstname} ${member.lastname}`}}
       </div>
@@ -292,7 +292,7 @@
       <b-button v-if="selectedGroup.groupid" class="mt-auto" variant="success" @click="openModal('create-event-modal')">
         + Create Event
       </b-button>
-      <h3 class="text-center mt-3">
+      <h3 v-if="selectedGroup.groupid" class="text-center mt-3">
         Invite Code<br>
         {{selectedGroup.groupinvitecode}}
       </h3>
