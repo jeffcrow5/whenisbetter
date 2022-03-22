@@ -10,9 +10,6 @@
         button-variant="outline-primary"
         stacked
       ></b-form-radio-group>
-      <h5 class="text-secondary p-3">
-        {{selectedGroup.groupdesc}}
-      </h5>
 
       <b-button variant="primary" @click="openModal('join-group-modal')" class="mt-auto">+ Join Group</b-button>
       <b-button variant="success" @click="openModal('create-group-modal')" class="mt-2">+ Create Group</b-button>
@@ -228,13 +225,16 @@
     </div>
 
     <div class="group-info">
+      <div v-if="selectedGroup.groupdesc">
+        <h3>Group Description</h3>
+        <div>
+          {{selectedGroup.groupdesc}}
+        </div> <br>
+      </div>
       <h3>Group Members</h3>
       <div v-for="(member, index) in groupMembers" :key="index" @click="showMemberSchedule(member)" role="button">
         {{`${member.firstname} ${member.lastname}`}}
       </div>
-      <b-button class="mt-3" variant="success" @click="openModal('create-event-modal')">
-        + Create Event
-      </b-button>
       <b-modal
       size="md"
       title="Enter Event Info"
@@ -289,13 +289,16 @@
           </b-form-group>
         </b-form>
       </b-modal>
-      <b-button class="mt-auto" variant="danger" @click="leaveGroup()">
-        Leave Group
+      <b-button class="mt-auto" variant="success" @click="openModal('create-event-modal')">
+        + Create Event
       </b-button>
       <h3 class="text-center mt-3">
         Invite Code<br>
         {{selectedGroup.groupinvitecode}}
       </h3>
+      <b-button class="mt-2" variant="danger" @click="leaveGroup()">
+        Leave Group
+      </b-button>
 
     </div>
     
@@ -545,7 +548,7 @@ export default {
 }
 .groups {
   grid-area: groups;
-  background-color: lightgray;
+  background-color: whitesmoke;
   padding: 20px;
   display: flex;
   flex-direction: column;
@@ -572,7 +575,7 @@ export default {
 
 .group-info {
   grid-area: group-info;
-  background-color: lightgray;
+  background-color: whitesmoke;
   display: flex;
   flex-direction: column;
   padding: 20px;
