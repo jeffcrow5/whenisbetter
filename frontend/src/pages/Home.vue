@@ -289,14 +289,14 @@
           </b-form-group>
         </b-form>
       </b-modal>
-      <b-button class="mt-auto" variant="success" @click="openModal('create-event-modal')">
+      <b-button v-if="selectedGroup" class="mt-auto" variant="success" @click="openModal('create-event-modal')">
         + Create Event
       </b-button>
       <h3 class="text-center mt-3">
         Invite Code<br>
         {{selectedGroup.groupinvitecode}}
       </h3>
-      <b-button class="mt-2" variant="danger" @click="leaveGroup()">
+      <b-button v-if="selectedGroup" class="mt-2" variant="danger" @click="leaveGroup()">
         Leave Group
       </b-button>
 
