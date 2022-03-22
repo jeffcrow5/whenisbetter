@@ -11,21 +11,22 @@
     <!-- Group View -->
     <div class="view" v-if="activeTab == 'Group View'">
       <div class="left">
-        Group to Modify
+        <h3>Group to Modify</h3>
         <b-form-select v-model="groupSelected" :options="groups.map(group => {
-          return {text: group.groupname, value: group.groupid}})" />     
+          return {text: group.groupname, value: group.groupid}})" /> 
+        <b-button v-if="groupSelected" class="mt-3" variant="danger" @click="deleteGroup">Delete Group</b-button>    
       </div>
       <!-- Group View -->
-      <div class="right">
+      <div v-if="groupSelected" class="right">
         <!-- Members -->
         <div class="list">
-          <p>Members</p>
-          <div v-for="(member, index) in groupMembers" :key="index">{{`${member.firstname} ${member.lastname}`}}<b-button @click="deleteMember(member)" variant="danger" class="ml-auto">Delete</b-button></div>
+          <h3>Members</h3>
+          <div v-for="(member, index) in groupMembers" :key="index" class="w-100">{{`${member.firstname} ${member.lastname}`}}<b-button @click="deleteMember(member)" variant="danger" class="ml-auto">Delete</b-button></div>
         </div>
 
         <!-- Events -->
         <div class="list">
-          <p>Events</p>
+          <h3>Events</h3>
           <div v-for="(event, index) in groupEvents" :key="index">{{event.eventname}}<b-button @click="deleteEvent(event)" variant="danger">Delete</b-button></div>
         </div>
       </div>
@@ -34,14 +35,14 @@
     <!-- User View -->
     <div class="view" v-else>
       <div class="left">
-        User to Modify
-        <b-form-select v-model="userSelected" :options="users.map((user, index) => {return {text: `${user.firstname} ${user.lastname}`, value: users[index]}})" />     
+        <h3>User to Modify</h3>
+        <b-form-select v-model="userSelected" :options="users.map((user, index) => {return {text: `${user.firstname} ${user.lastname}`, value: users[index]}})" />
+        <b-button v-if="userSelected" class="mt-3" variant="danger" @click="deleteUser()">Delete User</b-button>
       </div>
       <div v-if="userSelected" class="right">
         <b-form-checkbox v-model="isAdmin" @change="setAdminStatus">
           Administrator
         </b-form-checkbox>
-        <b-button variant="danger" @click="deleteUser()">Delete</b-button>
       </div>
     </div>
   </div>
@@ -68,7 +69,6 @@ export default {
   created() {
     Api.getCurrentUser().then((response) => {
         this.isCurrentUserAdmin = response.data[0].isadmin;
-        console.log(this.isCurrentUserAdmin);
         if (this.isCurrentUserAdmin) {
           this.getGroups()
           this.getUsers()
@@ -128,6 +128,12 @@ export default {
         this.getUsers()
       })
     },
+    deleteGroup() {
+      Api.deleteGroup(this.groupSelected)
+      .then(() => {
+        this.getGroups()
+      })
+    },
     setAdminStatus() {
       let status = this.isAdmin ? 1 : 0
       let userid = this.userSelected.userid
@@ -167,6 +173,6 @@ export default {
 .list {
   display: flex;
   flex-direction: column;
-  align-items: stretch;
+  /* align-items: stretch; */
 }
 </style>

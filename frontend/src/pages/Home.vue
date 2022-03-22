@@ -229,7 +229,7 @@
 
     <div class="group-info">
       <h3>Group Members</h3>
-      <div v-for="(member, index) in groupMembers" :key="index" @click="showMemberSchedule(member)">
+      <div v-for="(member, index) in groupMembers" :key="index" @click="showMemberSchedule(member)" role="button">
         {{`${member.firstname} ${member.lastname}`}}
       </div>
       <b-button class="mt-3" variant="success" @click="openModal('create-event-modal')">

@@ -1,6 +1,5 @@
 <template>
   <b-container class="container">
-    <p>Welcome to ur heckin profile nerd</p>
     <b-form-group label="First Name" label-for="first-name-input">
       <b-form-input
         id="first-name-input"
@@ -20,7 +19,7 @@
     <b-form-group label="Email Address" label-for="email-address-input">
       <b-form-input
         id="email-address-input"
-        v-model="userInfo.emailaddress"
+        :value="userInfo.emailaddress"
         autocomplete="off"
         disabled
       />
